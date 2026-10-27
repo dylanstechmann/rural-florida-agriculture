@@ -1,0 +1,24 @@
+# Blender backups and autosave
+*.blend1
+*.blend2
+*.blend_backup
+*.blend@
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Editors
+.vscode/
+.idea/
+
+# Temp files
+*.tmp
+*.log

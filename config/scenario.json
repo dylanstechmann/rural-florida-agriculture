@@ -1,0 +1,73 @@
+{
+  "scenario": {
+    "name": "Rural Florida pilot campus",
+    "version": "2026-10-27",
+    "status": "labeled placeholder assumptions for concept sizing, not a design",
+    "location_placeholder": "rural central Florida, USA - no site chosen",
+    "currency": "USD"
+  },
+  "climate": {
+    "notes": "placeholder weather assumptions for sizing only",
+    "peak_sun_hours_per_day": 5.4,
+    "annual_rainfall_mm": 1300,
+    "design_hurricane_category_placeholder": 3,
+    "freeze_events_per_year": 2,
+    "humid_season_months": 6
+  },
+  "campus": {
+    "zone_count": 4,
+    "lit_area_m2_per_zone": 60,
+    "tiers_per_zone": 4,
+    "packhouse_area_m2": 80,
+    "screenhouse_area_m2": 300,
+    "roof_harvest_area_m2": 1200,
+    "solar_array_kwp": 120,
+    "battery_kwh": 200,
+    "critical_load_fraction": 0.35,
+    "raised_floor_height_m": 1.2,
+    "design_backup_autonomy_hours": 12
+  },
+  "crops": [
+    {"name": "pea shoots", "system": "NFT multi-tier", "area_m2": 200, "cycles_per_year": 20, "kg_per_m2_per_cycle": 1.6},
+    {"name": "basil and specialty herbs", "system": "NFT multi-tier", "area_m2": 160, "cycles_per_year": 16, "kg_per_m2_per_cycle": 1.8},
+    {"name": "strawberries", "system": "indoor stacked", "area_m2": 120, "cycles_per_year": 4, "kg_per_m2_per_cycle": 4.0},
+    {"name": "tomatoes", "system": "drip substrate", "area_m2": 200, "cycles_per_year": 3, "kg_per_m2_per_cycle": 8.0},
+    {"name": "sweet peppers", "system": "drip substrate", "area_m2": 120, "cycles_per_year": 2, "kg_per_m2_per_cycle": 5.5},
+    {"name": "oranges (citrus)", "system": "screenhouse + protected enclosure", "area_m2": 300, "cycles_per_year": 1, "kg_per_m2_per_cycle": 3.0}
+  ],
+  "water": {
+    "uptake_l_per_m2_per_day": 3.0,
+    "screenhouse_uptake_l_per_m2_per_day": 1.5,
+    "recirculation_fraction": 0.95,
+    "condensate_recovery_l_per_day": 120,
+    "rain_harvest_efficiency": 0.8,
+    "irrigation_backup_days": 3,
+    "disinfection_stage": "filtration + UV placeholder",
+    "purge_handling": "controlled nutrient-aware disposal per local rules"
+  },
+  "energy": {
+    "led_watts_per_m2_lit": 220,
+    "lit_hours_per_day": 16,
+    "hvac_kwh_per_m2_per_day": 0.9,
+    "pumps_kwh_per_day": 12,
+    "packhouse_refrigeration_kwh_per_day": 40,
+    "controls_kwh_per_day": 4,
+    "solar_performance_ratio": 0.78
+  },
+  "automation": {
+    "local_first_control": true,
+    "n_plus_1": ["water pumps", "zone controllers", "dosing pumps", "critical power path"],
+    "storm_mode_checklist": [
+      "secure loose items and verify panel ballast",
+      "shed non-critical loads and switch to critical loads",
+      "verify battery state of charge and generator fuel",
+      "lock screenhouse vents and confirm uplift straps"
+    ],
+    "qualification_ladder": [
+      "simulated day",
+      "wet test",
+      "commissioning",
+      "first crop cycle audit"
+    ]
+  }
+}

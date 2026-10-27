@@ -1,0 +1,9 @@
+[project]
+name = "floridafarm"
+version = "0.1.0"
+description = "Rural-Florida agriculture planning fixtures: labeled placeholder arithmetic for a high-tech agriculture concept"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
