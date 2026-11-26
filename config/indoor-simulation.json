@@ -1,0 +1,237 @@
+{
+  "scenario": {
+    "name": "Synthetic arid indoor farm interval fixture",
+    "version": "2026-11-26",
+    "status": "NON-OPERATIONAL synthetic simulation with unvalidated assumptions; not a design or recommendation",
+    "location_placeholder": "generic arid vertical-farm concept; no real site and no measured Iran site data",
+    "source_label": "agent-drafted synthetic software fixture; every value is invented"
+  },
+  "intervals": {
+    "count": 24
+  },
+  "lighting_profiles": [
+    {
+      "crop": "leafy greens (synthetic profile)",
+      "area_m2": 120.0,
+      "ppfd_umol_m2_s": 200.0,
+      "efficacy_umol_j": 2.5,
+      "criticality": "noncritical",
+      "source_label": "synthetic lighting arithmetic fixture; not an agronomic target or measured crop response",
+      "schedule": [
+        {
+          "start_minute": 360,
+          "end_minute": 1080
+        }
+      ]
+    },
+    {
+      "crop": "basil (synthetic profile)",
+      "area_m2": 80.0,
+      "ppfd_umol_m2_s": 180.0,
+      "efficacy_umol_j": 2.4,
+      "criticality": "noncritical",
+      "source_label": "synthetic lighting arithmetic fixture; not an agronomic target or measured crop response",
+      "schedule": [
+        {
+          "start_minute": 1080,
+          "end_minute": 360
+        },
+        {
+          "start_minute": 300,
+          "end_minute": 420
+        }
+      ]
+    }
+  ],
+  "timers": [
+    {
+      "name": "airflow boost (synthetic timer)",
+      "power_kw": 2.0,
+      "criticality": "noncritical",
+      "source_label": "synthetic timer fixture with deliberate gaps, overlaps and midnight wrap",
+      "schedule": [
+        {
+          "start_minute": 0,
+          "end_minute": 240
+        },
+        {
+          "start_minute": 180,
+          "end_minute": 300
+        },
+        {
+          "start_minute": 1200,
+          "end_minute": 60
+        }
+      ]
+    }
+  ],
+  "continuous_loads": [
+    {
+      "name": "controls (synthetic load)",
+      "power_kw": 1.0,
+      "criticality": "critical",
+      "source_label": "invented continuous-load placeholder"
+    },
+    {
+      "name": "pump skid (synthetic load)",
+      "power_kw": 4.0,
+      "criticality": "critical",
+      "source_label": "invented continuous-load placeholder"
+    },
+    {
+      "name": "dehumidification (synthetic load)",
+      "power_kw": 10.0,
+      "criticality": "critical",
+      "source_label": "invented continuous-load placeholder"
+    },
+    {
+      "name": "packhouse (synthetic load)",
+      "power_kw": 3.0,
+      "criticality": "noncritical",
+      "source_label": "invented continuous-load placeholder"
+    }
+  ],
+  "grid": {
+    "available_by_interval": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "solar": {
+    "power_kw_by_interval": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      15.0,
+      25.0,
+      35.0,
+      40.0,
+      35.0,
+      25.0,
+      15.0,
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "battery": {
+    "capacity_kwh": 120.0,
+    "initial_charge_kwh": 40.0,
+    "minimum_charge_kwh": 10.0,
+    "recovery_target_charge_kwh": 100.0,
+    "maximum_charge_power_kw": 20.0,
+    "maximum_discharge_power_kw": 20.0,
+    "charge_efficiency": 0.95,
+    "discharge_efficiency": 0.9,
+    "grid_recovery_power_kw": 5.0
+  },
+  "water": {
+    "capacity_l": 1000.0,
+    "initial_stock_l": 300.0,
+    "reserve_l": 200.0,
+    "withdrawal_l_per_hour": 20.0,
+    "recovery_l_per_hour_by_interval": [
+      0.0,
+      0.0,
+      0.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0,
+      15.0
+    ],
+    "makeup_l_per_hour_by_interval": [
+      0.0,
+      0.0,
+      0.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0,
+      10.0
+    ]
+  },
+  "chemical_inventory": [
+    {
+      "name": "Nutrient salt A (synthetic inventory label)",
+      "stock_amount": 25.0,
+      "reserve_amount": 10.0,
+      "unit": "kg",
+      "provenance": "synthetic record INV-A-001; no supplier receipt, assay or measured stock",
+      "source_label": "inventory metadata only; no mixing, dosing or use recommendation"
+    },
+    {
+      "name": "Nutrient salt B (synthetic inventory label)",
+      "stock_amount": 8.0,
+      "reserve_amount": 12.0,
+      "unit": "kg",
+      "provenance": "synthetic record INV-B-002; no supplier receipt, assay or measured stock",
+      "source_label": "inventory metadata only; no mixing, dosing or use recommendation"
+    }
+  ]
+}

@@ -55,13 +55,18 @@ rural-florida-agriculture/
 ├── README.md                  # this file
 ├── pyproject.toml
 ├── .gitignore
-├── config/scenario.json       # labeled placeholder assumptions
+├── config/
+│   ├── scenario.json               # original labeled daily-model assumptions
+│   └── indoor-simulation.json      # separate synthetic interval fixture
 ├── docs/
 │   ├── crop-system-matrix.md          # hand-written crop reasoning
 │   ├── water-energy-model.md          # model equations and regen instructions
 │   ├── resilience-and-automation.md   # flood/storm resilience, N+1, local-first
-│   └── scenario-report.md             # GENERATED report (tests pin it)
-├── src/floridafarm/           # config loader, model, report renderer, CLI
+│   ├── scenario-report.md             # GENERATED original report (tests pin it)
+│   ├── indoor-simulation.md           # interval units, equations and exact scope
+│   ├── indoor-simulation-report.md    # GENERATED indoor Markdown (tests pin it)
+│   └── indoor-simulation.json         # GENERATED indoor JSON (tests pin it)
+├── src/floridafarm/           # daily model plus isolated indoor simulator and CLIs
 ├── tests/                     # unittest suite (stdlib only)
 └── viz/
     ├── rural-florida-campus.blend   # FLRural_* scenes (separate from Iran blend)
@@ -82,6 +87,38 @@ python -m unittest discover -s tests -v                            # run the tes
 `tests/test_report.py` fails if the committed `docs/scenario-report.md` no
 longer matches the model, so the generated file never silently drifts from
 the assumptions.
+
+### Separate NON-OPERATIONAL indoor simulated day
+
+A bounded interval fixture exercises lighting, timers, energy dispatch,
+battery recovery, water stock and inventory metadata without changing the
+original daily scenario or its generated report:
+
+```bash
+PYTHONPATH=src python3 -m floridafarm simulate-day \
+  --config config/indoor-simulation.json \
+  --json-out docs/indoor-simulation.json \
+  --markdown-out docs/indoor-simulation-report.md
+```
+
+The default is 24 hourly intervals; a configured count must divide 1440 and
+is capped at 96. Source-labelled synthetic PPFD schedules produce union
+photoperiod and DLI arithmetic. Half-open timer windows support gaps,
+overlaps and midnight wrapping. The energy ledger accounts for continuous
+and scheduled loads, solar/grid availability, battery state, critical and
+noncritical served/shed energy, conservation and recovery. A separate water
+ledger tracks stock, recovery, makeup, shortfall and reserve. Chemical and
+nutrient records are provenance/stock/reserve metadata only.
+
+This track is **NON-OPERATIONAL simulation**: no actuator or hardware
+interface, no real-site measurements, no crop-specific nutrient dosing or
+mixing recommendation, no food-safety claim, and no storm-resilience
+certification. The generic arid fixture is not measured Iran site data.
+Plant base editing is outside this model and, if discussed elsewhere, is a
+separate trait-evidence layer rather than an environmental-control
+substitute. See `docs/indoor-simulation.md` for equations, validation and
+all unvalidated assumptions. Both indoor outputs are deterministic and
+pinned by `tests/test_indoor_report.py`.
 
 ## 3D visualizations
 
