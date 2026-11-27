@@ -33,6 +33,15 @@ class IndoorCliTests(unittest.TestCase):
                 "report_sha256": hashlib.sha256((root / "day.json").read_bytes()).hexdigest(),
                 "reservoir_capacity_l": 1250,
             })
+            self.assertEqual(main(argv + ["--makeup-outage", "0", "1440"]), 0)
+            variant = (root / "day.json").read_bytes()
+            self.assertEqual(json.loads(variant)["water_summary"]["makeup_l"], 0)
+            self.assertIn("minute 1440", (root / "day.md").read_text(encoding="utf-8"))
+            self.assertEqual(json.loads((root / "handoff.json").read_bytes())["report_sha256"],
+                             hashlib.sha256(variant).hexdigest())
+            with self.assertRaises(SystemExit):
+                main(argv + ["--makeup-outage", "100", "100"])
+            self.assertEqual((root / "day.json").read_bytes(), variant)
             with self.assertRaises(SystemExit):
                 main(argv[:-1] + [str(root / "config.json")])
             self.assertEqual(json.loads((root / "config.json").read_bytes()), config)

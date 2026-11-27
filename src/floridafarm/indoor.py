@@ -388,7 +388,7 @@ def _clean(value):
     return value
 
 
-def simulate_day(cfg):
+def simulate_day(cfg, *, makeup_outage=None):
     """Simulate one bounded day using only the supplied synthetic mapping.
 
     Dispatch order is solar -> critical loads -> noncritical loads (grid up)
@@ -398,6 +398,12 @@ def simulate_day(cfg):
     when grid is available, up to the explicit grid recovery power limit.
     """
     validate_indoor_scenario(cfg)
+    outage_schedule = []
+    if makeup_outage is not None:
+        if not isinstance(makeup_outage, (tuple, list)) or len(makeup_outage) != 2:
+            raise IndoorScenarioError("makeup_outage requires two minute boundaries")
+        window = {"start_minute": makeup_outage[0], "end_minute": makeup_outage[1]}
+        outage_schedule = _schedule({"schedule": [window]}, "makeup_outage")
     count = cfg["intervals"]["count"]
     interval_minutes = MINUTES_PER_DAY // count
     duration_h = interval_minutes / 60.0
@@ -536,7 +542,9 @@ def simulate_day(cfg):
         maximum_residual = max(maximum_residual, residual)
 
         water_recovery = float(water_cfg["recovery_l_per_hour_by_interval"][index]) * duration_h
-        water_makeup = float(water_cfg["makeup_l_per_hour_by_interval"][index]) * duration_h
+        outage_minutes = _active_minutes(outage_schedule, start, end)
+        makeup_hours = (interval_minutes - outage_minutes) / 60.0
+        water_makeup = float(water_cfg["makeup_l_per_hour_by_interval"][index]) * makeup_hours
         water_requested = float(water_cfg["withdrawal_l_per_hour"]) * duration_h
         water_available = water_stock + water_recovery + water_makeup
         water_served = min(water_requested, water_available)
@@ -704,4 +712,9 @@ def simulate_day(cfg):
         "intervals": intervals,
         "limitations": list(LIMITATIONS),
     }
+    if outage_schedule:
+        result["scenario"]["source_label"] += (
+            f". Scheduled makeup water interrupted from minute {makeup_outage[0]} "
+            f"to minute {makeup_outage[1]} (end excluded, wrapping at midnight when needed)"
+        )
     return _clean(result)
