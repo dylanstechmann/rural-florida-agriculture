@@ -26,6 +26,13 @@ Both generated files are pinned by `tests/test_indoor_report.py`. They have
 no timestamps, random values, environment lookups or external data reads.
 Regenerate both after changing the fixture; never hand-edit either output.
 
+Add `--water-handoff-out farm-water.json` to the same command to exchange
+the simulated day with Habitat Resource Sandbox. This writes the configured
+agricultural reservoir capacity in liters and the SHA-256 of the emitted
+JSON report. Supply both files to the habitat water-budget comparison.
+The capacity matters when comparing a different makeup schedule because
+overflow can discard water before a later interval needs it.
+
 ## Bounds, units and schedules
 
 - `intervals.count` is an integer from 1 through 96 and must divide 1440, so
@@ -57,6 +64,7 @@ lighting power kW = area_m2 x PPFD_umol_m2_s / efficacy_umol_j / 1000
 photoperiod h     = union of scheduled active minutes / 60
 DLI mol/m2/day    = PPFD_umol_m2_s x photoperiod_h x 3600 / 1,000,000
 requested kWh     = lighting power kW x photoperiod h
+served-equivalent DLI mol/m2/day = scheduled DLI x (served lighting kWh / requested lighting kWh)
 ```
 
 No target DLI, yield response or crop-health outcome is inferred. The two

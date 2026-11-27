@@ -30,6 +30,20 @@ class IndoorReportTests(unittest.TestCase):
             committed = fh.read()
         self.assertEqual(committed, render_indoor_markdown(self.result))
 
+    def test_report_distinguishes_scheduled_and_dispatched_light(self):
+        text = render_indoor_markdown(self.result)
+        self.assertIn("Served-equivalent DLI mol/m2/day", text)
+        self.assertIn("| 8.424 | 6.480 | 78.000 | 18.000 |", text)
+        self.assertIn("| 8.640 | 8.640 | 115.200 | 0.000 |", text)
+
+    def test_light_report_handles_zero_and_unresolved_energy(self):
+        cfg = load_indoor_scenario(CONFIG_PATH)
+        cfg["lighting_profiles"][0]["ppfd_umol_m2_s"] = 0
+        cfg["lighting_profiles"][1]["area_m2"] = 1e-12
+        text = render_indoor_markdown(simulate_day(cfg))
+        self.assertIn("| 12.000 | 0.000 | 0.000 | 0.000 | 0.000 |", text)
+        self.assertIn("| 13.000 | 8.424 | unresolved | 0.000 | 0.000 |", text)
+
     def test_report_contains_scope_and_honest_negative(self):
         text = render_indoor_markdown(self.result)
         for content in (
