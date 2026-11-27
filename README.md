@@ -120,6 +120,13 @@ substitute. See `docs/indoor-simulation.md` for equations, validation and
 all unvalidated assumptions. Both indoor outputs are deterministic and
 pinned by `tests/test_indoor_report.py`.
 
+`tests/test_indoor_blackout.py` also pins the studied schema-v1 blackout
+artifact: with grid and solar disabled and the battery at its reserve floor,
+all 643.2 kWh are shed while the deliberately independent agricultural water
+ledger still records 480 L served withdrawal and 315 L recovered. The separate
+habitat consumer's 21 power/water-coupling conflicts remain an external
+integration result; the producer does not silently adopt that coupling.
+
 ## 3D visualizations
 
 `viz/rural-florida-campus.blend` holds three labeled scenes:

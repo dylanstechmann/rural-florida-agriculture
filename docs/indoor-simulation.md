@@ -126,6 +126,35 @@ shortfall L = requested withdrawal - served withdrawal
 Stock cannot become negative. Reserve is reported metadata, not a hidden
 interlock, and ending below reserve is retained as an honest result.
 
+## Complete-blackout regression and schema-v1 handoff
+
+`tests/test_indoor_blackout.py` derives a blackout case in memory from the
+committed fixture. It disables grid availability in all 24 intervals, sets all
+solar inputs to zero, and sets initial battery charge to the existing 10 kWh
+reserve floor. Every other input, including scenario version `2026-11-26` and
+the independent agricultural water ledger, remains unchanged. The emitted
+artifact remains `schema_version` 1; this regression does not revise the
+interface or reinterpret the scientific assumptions.
+
+The current fixture requests and sheds 643.2 kWh, serves 0 kWh, and finishes
+with the battery at 10 kWh. It still records 480 L of requested and served
+agricultural withdrawal, 315 L recovered and zero water shortfall. Those water
+entries are explicit producer inputs and stock arithmetic, not evidence that
+recovery can operate without power. Introducing power-coupled producer water
+would require an explicit fixture and interface revision rather than a silent
+change to this case.
+
+The exact serialized producer SHA-256 pins are
+`82981f9df5227450aa41d4b4620494564cc56c90f05fe6198d4ba0d3ffc78ba5`
+for the ordinary artifact and
+`3996c10f0ccb3944bee2e6c53bdf84c8cc544d7f3d47d45dda654692e79bf3bf`
+for the blackout artifact. The producer regression also pins recovery after a
+preceding shed-power interval at zero-based indices 3 through 23. The separate
+habitat importer interprets those 21 observations as power/water-coupling
+conflicts under its delayed, power-coupled consumer model. That consumer
+classification is verified by the external comparison reproducer, not by
+pretending the producer and consumer share a water model.
+
 ## Chemical/nutrient inventory metadata
 
 Inventory records contain only a name, nonnegative stock and reserve amounts,
