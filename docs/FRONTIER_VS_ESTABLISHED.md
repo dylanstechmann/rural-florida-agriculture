@@ -9,7 +9,12 @@ validation.
 
 ## Established SOFTWARE observations
 
-At this dated checkpoint, the complete working-tree suite passed **49 tests**.
+The original pre-integration checkpoint passed **49/49 tests**. After the
+fast-forward integration, the final reconciled tree at commit
+`17689b1b75c397f6e11f1fead0c4efd4e9648fb4` passed **52/52 tests** before
+that commit was pushed. Both counts are retained as software observations;
+the increase reflects the reconciled incoming test suite.
+
 The blackout regression derives its case from fixture version `2026-11-26`,
 keeps producer artifact `schema_version` 1, disables grid and solar input, and
 starts the battery at its 10 kWh minimum charge. Exact JSON serialization and
