@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 from .config import load_scenario
-from .indoor import load_indoor_scenario, simulate_day
+from .indoor import IndoorScenarioError, load_indoor_scenario, simulate_day
 from .indoor_report import render_indoor_json, render_indoor_markdown
 from .report import render_report
 
@@ -35,6 +35,8 @@ def main(argv=None):
     day.add_argument("--config", default="config/indoor-simulation.json")
     day.add_argument("--json-out", required=True)
     day.add_argument("--markdown-out", required=True)
+    day.add_argument("--makeup-outage", nargs=2, type=int, metavar=("START_MINUTE", "END_MINUTE"),
+                     help="Interrupt scheduled makeup water for a window of the simulated day")
     day.add_argument("--water-handoff-out", type=Path,
                      help="Write reservoir capacity and the exact JSON report digest for water-budget replay")
 
@@ -49,7 +51,10 @@ def main(argv=None):
             ):
                 parser.error("config and the three output files must have distinct paths")
         indoor_cfg = load_indoor_scenario(args.config)
-        result = simulate_day(indoor_cfg)
+        try:
+            result = simulate_day(indoor_cfg, makeup_outage=args.makeup_outage)
+        except IndoorScenarioError as error:
+            day.error(str(error))
         report_bytes = render_indoor_json(result).encode("utf-8")
         Path(args.json_out).write_bytes(report_bytes)
         with open(args.markdown_out, "w", encoding="utf-8", newline="\n") as fh:

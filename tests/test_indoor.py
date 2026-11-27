@@ -87,6 +87,28 @@ class IndoorSimulationTests(unittest.TestCase):
         self.assertEqual(active, [0, 60, 0])
         self.assertEqual(requested, [0.0, 2.0, 0.0])
 
+    def test_makeup_outage_prorates_partial_hours_and_wraps(self):
+        cfg = self.cfg()
+        cfg["water"]["makeup_l_per_hour_by_interval"] = [12] * 24
+        before = copy.deepcopy(cfg)
+        for window, expected in [((30, 90), [6, 6] + [12] * 22),
+                                 ((1380, 30), [6] + [12] * 22 + [0]),
+                                 ((0, 1440), [0] * 24)]:
+            with self.subTest(window=window):
+                result = simulate_day(cfg, makeup_outage=window)
+                self.assertEqual([r["water_makeup_l"] for r in result["intervals"]], expected)
+                self.assertEqual(result["water_summary"]["makeup_l"], sum(expected))
+                self.assertEqual(result["water_summary"]["recovered_l"],
+                                 self.result["water_summary"]["recovered_l"])
+                self.assertEqual(result["energy_summary"], self.result["energy_summary"])
+                self.assertIn(f"minute {window[0]}", result["scenario"]["source_label"])
+        self.assertEqual(cfg, before)
+
+    def test_invalid_makeup_outage_bounds(self):
+        for window in [(0, 0), (1440, 0), (0, 1441), (-1, 42), (False, 60), (0, 2.5), [1]]:
+            with self.subTest(window=window), self.assertRaises(IndoorScenarioError):
+                simulate_day(self.base, makeup_outage=window)
+
     def test_energy_conservation_and_battery_bounds_every_interval(self):
         cfg = self.base["battery"]
         for row in self.result["intervals"]:

@@ -33,6 +33,15 @@ JSON report. Supply both files to the habitat water-budget comparison.
 The capacity matters when comparing a different makeup schedule because
 overflow can discard water before a later interval needs it.
 
+Use `--makeup-outage 510 630` to interrupt scheduled makeup from 08:30 until
+10:30. The model prorates the configured hourly makeup rate by the minutes
+available in each interval. Internal farm recovery follows its own schedule.
+A window can cross midnight, and `--makeup-outage 0 1440` removes the whole
+day's scheduled makeup. Use distinct output filenames for a scenario variant.
+Its JSON and Markdown carry the interruption times and the handoff pins the
+variant's JSON. A multi-day habitat replay repeats this farm day, including
+its interruption, on every modeled day.
+
 ## Bounds, units and schedules
 
 - `intervals.count` is an integer from 1 through 96 and must divide 1440, so
