@@ -30,6 +30,16 @@ def _windows(windows):
     )
 
 
+def _served_dli(profile):
+    planned = profile["dli_mol_m2_day"]
+    if planned == 0:
+        return "0.000"
+    requested = profile["requested_kwh"]
+    if requested == 0:
+        return "unresolved"
+    return f"{planned * (profile['served_kwh'] / requested):.3f}"
+
+
 def render_indoor_markdown(result):
     """Render the committed indoor report from a result, not from a clock."""
     scenario = result["scenario"]
@@ -67,15 +77,22 @@ def render_indoor_markdown(result):
         "Power (kW) = area (m2) x PPFD / efficacy (umol/J) / 1000. Overlapping windows "
         "are counted once, not as additive light or energy. These are bookkeeping "
         "identities on invented inputs, not crop targets or measured crop responses.",
+        "Served-equivalent DLI uses the energy dispatched to each lighting profile: "
+        "scheduled DLI x (served kWh / requested kWh). It assumes constant "
+        "efficacy and uniform light distribution. A positive DLI with requested energy "
+        "rounded to zero has an unresolved service fraction.",
         "",
         _table(
             ["Crop/profile", "Area m2", "PPFD umol/m2/s", "Efficacy umol/J", "Power kW",
-             "Union photoperiod h", "DLI mol/m2/day", "Requested kWh", "Shed kWh"],
+             "Union photoperiod h", "Scheduled DLI mol/m2/day", "Served-equivalent DLI mol/m2/day",
+             "Requested kWh", "Shed kWh"],
             [[
                 profile["crop"], f"{profile['area_m2']:.1f}",
                 f"{profile['ppfd_umol_m2_s']:.1f}", f"{profile['efficacy_umol_j']:.2f}",
                 f"{profile['lighting_power_kw']:.3f}", f"{profile['photoperiod_hours']:.3f}",
-                f"{profile['dli_mol_m2_day']:.3f}", f"{profile['requested_kwh']:.3f}",
+                f"{profile['dli_mol_m2_day']:.3f}",
+                _served_dli(profile),
+                f"{profile['requested_kwh']:.3f}",
                 f"{profile['shed_kwh']:.3f}",
             ] for profile in result["lighting_profiles"]],
         ),

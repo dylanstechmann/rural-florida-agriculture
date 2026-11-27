@@ -57,6 +57,7 @@ lighting power kW = area_m2 x PPFD_umol_m2_s / efficacy_umol_j / 1000
 photoperiod h     = union of scheduled active minutes / 60
 DLI mol/m2/day    = PPFD_umol_m2_s x photoperiod_h x 3600 / 1,000,000
 requested kWh     = lighting power kW x photoperiod h
+served-equivalent DLI mol/m2/day = scheduled DLI x (served lighting kWh / requested lighting kWh)
 ```
 
 No target DLI, yield response or crop-health outcome is inferred. The two

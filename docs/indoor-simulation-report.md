@@ -22,11 +22,12 @@ The interval count is configurable from 1 through 96 and must divide 1440 exactl
 ## 2. Source-labelled lighting and DLI arithmetic
 
 DLI (mol/m2/day) = PPFD (umol/m2/s) x union photoperiod (h) x 3600 / 1,000,000. Power (kW) = area (m2) x PPFD / efficacy (umol/J) / 1000. Overlapping windows are counted once, not as additive light or energy. These are bookkeeping identities on invented inputs, not crop targets or measured crop responses.
+Served-equivalent DLI uses the energy dispatched to each lighting profile: scheduled DLI x (served kWh / requested kWh). It assumes constant efficacy and uniform light distribution. A positive DLI with requested energy rounded to zero has an unresolved service fraction.
 
-| Crop/profile | Area m2 | PPFD umol/m2/s | Efficacy umol/J | Power kW | Union photoperiod h | DLI mol/m2/day | Requested kWh | Shed kWh |
-|---|---|---|---|---|---|---|---|---|
-| leafy greens (synthetic profile) | 120.0 | 200.0 | 2.50 | 9.600 | 12.000 | 8.640 | 115.200 | 0.000 |
-| basil (synthetic profile) | 80.0 | 180.0 | 2.40 | 6.000 | 13.000 | 8.424 | 78.000 | 18.000 |
+| Crop/profile | Area m2 | PPFD umol/m2/s | Efficacy umol/J | Power kW | Union photoperiod h | Scheduled DLI mol/m2/day | Served-equivalent DLI mol/m2/day | Requested kWh | Shed kWh |
+|---|---|---|---|---|---|---|---|---|---|
+| leafy greens (synthetic profile) | 120.0 | 200.0 | 2.50 | 9.600 | 12.000 | 8.640 | 8.640 | 115.200 | 0.000 |
+| basil (synthetic profile) | 80.0 | 180.0 | 2.40 | 6.000 | 13.000 | 8.424 | 6.480 | 78.000 | 18.000 |
 
 - **leafy greens (synthetic profile)** source: synthetic lighting arithmetic fixture; not an agronomic target or measured crop response. Schedule: [06:00, 18:00); gaps: [00:00, 06:00), [18:00, 24:00); overlap regions: none.
 - **basil (synthetic profile)** source: synthetic lighting arithmetic fixture; not an agronomic target or measured crop response. Schedule: [18:00, 06:00), [05:00, 07:00); gaps: [07:00, 18:00); overlap regions: [05:00, 06:00).
